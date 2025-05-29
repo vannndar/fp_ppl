@@ -1,0 +1,56 @@
+@startuml
+actor "Student" as student
+actor "Administrator" as admin
+
+rectangle "API Gateway" {
+    [Authentication Service]
+    [Group Management Service]
+    [Chat Service]
+    [Content Management Service]
+    [Announcement Service]
+}
+
+rectangle "Databases" {
+    [User Database (PostgreSQL)]
+    [Group Database (MongoDB)]
+    [Chat Database (Redis)]
+    [Content Database (MongoDB)]
+    [Announcement Database (MongoDB)]
+}
+
+rectangle "Message Queue" {
+    [RabbitMQ]
+}
+
+rectangle "Service Discovery" {
+    [Eureka / Consul]
+}
+
+rectangle "Real-Time Communication" {
+    [WebSockets (Socket.io)]
+}
+
+student --> [Authentication Service] : Login/Register
+student --> [Group Management Service] : Join/Leave Group
+student --> [Chat Service] : Send/Receive Messages
+student --> [Content Management Service] : View/Upload Content
+student --> [Announcement Service] : View Announcements
+
+admin --> [Group Management Service] : Manage Groups
+admin --> [Announcement Service] : Send Announcements
+
+[Authentication Service] --> [User Database (PostgreSQL)] : Store User Data
+[Group Management Service] --> [Group Database (MongoDB)] : Store Group Data
+[Chat Service] --> [Chat Database (Redis)] : Store Chat Messages
+[Content Management Service] --> [Content Database (MongoDB)] : Store Content Data
+[Announcement Service] --> [Announcement Database (MongoDB)] : Store Announcements
+
+[Group Management Service] --> [Message Queue (RabbitMQ)] : Publish Group Events
+[Chat Service] --> [Message Queue (RabbitMQ)] : Publish New Messages
+[Content Management Service] --> [Message Queue (RabbitMQ)] : Publish Content Updates
+[Announcement Service] --> [Message Queue (RabbitMQ)] : Publish New Announcements
+
+[API Gateway] --> [Eureka / Consul] : Discover Services
+[Chat Service] --> [WebSockets (Socket.io)] : Establish Real-Time Connection
+
+@enduml
