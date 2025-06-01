@@ -1,46 +1,53 @@
-from authentication_service import AuthenticationService
-from group_service import GroupService
-from messaging_service import MessagingService
-from reminder_service import ReminderService
-from notification_service import NotificationService
-from notification_sender import FcmSender, EmailSender
-from event_bus import EventBus
-from api_gateway import ApiGateway
+from common.database import PostgreSQL, MongoDB, FirebaseRealtimeDB, FirebaseStorage, FCMClient
+from common.event_bus import EventBus, event_bus
+from common.api_gateway import ApiGateway
+from authentication_service.authentication import AuthenticationService
+from group_messaging_service.group_messaging import GroupMessagingService
+from task_management_service.task_management import TaskManagementService
+from content_notes_service.content_notes import ContentNotesService
+from notification_service.notification import NotificationService
 
 def main():
-    event_bus = EventBus()
+    # Inisialisasi database simulasi
+    pg_db = PostgreSQL()
+    mongo_db = MongoDB()
+    firebase_db = FirebaseRealtimeDB()
+    firebase_storage = FirebaseStorage()
+    fcm_client = FCMClient()
 
-    auth_service = AuthenticationService()
-    group_service = GroupService()
-    messaging_service = MessagingService(event_bus)
-    reminder_service = ReminderService(event_bus)
+    # Inisialisasi service
+    auth_service = AuthenticationService(pg_db)
+    group_service = GroupMessagingService(mongo_db, firebase_db)
+    task_service = TaskManagementService(mongo_db)
+    content_service = ContentNotesService(firebase_storage)
+    notification_service = NotificationService(fcm_client)
 
-    # Setup dua channel notifikasi sekaligus: Push dan Email
-    fcm_sender = FcmSender()
-    email_sender = EmailSender()
-    notification_service = NotificationService(event_bus, [fcm_sender, email_sender])
+    # Facade / API Gateway
+    api_gateway = ApiGateway(auth_service, group_service, task_service, content_service, notification_service)
 
-    api_gateway = ApiGateway(auth_service, group_service, messaging_service, reminder_service, notification_service)
-
-    # Contoh operasi melalui facade ApiGateway
+    # Contoh operasi
+    print("--- Starting microservices simulation... ---\n")
     api_gateway.register_user("user1", {"name": "Alice"})
-    api_gateway.authenticate_user("user1")
-    api_gateway.create_group("group1", "Math Group", "user1")
-    api_gateway.join_group("group1", "user1")
-    api_gateway.send_group_message("group1", "user1", "Hello from multi-channel notification!")
-    api_gateway.set_reminder("user1", "Exam tomorrow!")
+    api_gateway.authenticate("user1")
+    api_gateway.register_user("user2", {"name": "Bob"})
+    api_gateway.authenticate("user2")
 
-    # Simulasi event untuk uji notifikasi multi channel
-    event_bus.publish("MessageSent", {
-        "group_id": "group1",
-        "user_id": "user1",
-        "content": "New group message for all channels!"
-    })
+    print("\n--- Group Messaging Operations ---\n")
+    api_gateway.create_group("group1", "Study Group", "user1")
+    api_gateway.send_message("group1", {"sender": "user1", "text": "Hello, team!"})
+    api_gateway.join_group("group1", "user2")
+    api_gateway.send_message("group1", {"sender": "user2", "text": "Hi Alice!"})
+    api_gateway.send_message("group1", {"sender": "user1", "text": "Let's meet tomorrow."})
+    api_gateway.send_message("group1", {"sender": "user2", "text": "Sure, sounds good!"})
 
-    event_bus.publish("ReminderSet", {
-        "user_id": "user1",
-        "text": "This is a reminder sent on multiple channels."
-    })
+    print("\n--- Task Management Operations ---\n")
+    api_gateway.create_task("task1", {"title": "Math Homework", "due_date": "2025-06-10"})
+    api_gateway.set_reminder("task1", {"reminder_time": "2025-06-09T18:00"})
+    api_gateway.schedule_event("schedule1", {"event": "Group Meeting", "time": "2025-06-11T15:00"})
+
+    print("\n--- Content Notes Operations ---\n")
+    api_gateway.upload_content("content1", {"title": "Calculus Notes", "file_url": "http://example.com/calculus.pdf"})
+    api_gateway.edit_content("content1", {"title": "Calculus Notes Updated", "file_url": "http://example.com/calculus_v2.pdf"})
 
 if __name__ == "__main__":
     main()

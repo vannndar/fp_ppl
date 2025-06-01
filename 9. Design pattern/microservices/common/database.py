@@ -28,6 +28,13 @@ class MongoDB:
                 print(f"[MongoDB] User {user_id} joined group {group_id}")
             else:
                 print(f"[MongoDB] User {user_id} already in group {group_id}")
+            
+    def update_group(self, group_id, data):
+        if group_id in self.groups:
+            self.groups[group_id] = data
+            print(f"[MongoDB] Group updated: {group_id}")
+        else:
+            print(f"[MongoDB] Group {group_id} not found")
 
 class FirebaseRealtimeDB:
     def __init__(self):
@@ -36,3 +43,18 @@ class FirebaseRealtimeDB:
     def save_message(self, message):
         self.messages.append(message)
         print(f"[FirebaseRealtimeDB] Message saved: {message}")
+
+class FirebaseStorage:
+    def __init__(self):
+        self.contents = {}
+
+    def save_content(self, content_id, data):
+        self.contents[content_id] = data
+        print(f"[FirebaseStorage] Content saved: {content_id}")
+
+    def get_content(self, content_id):
+        return self.contents.get(content_id)
+
+class FCMClient:
+    def send_push(self, user_id, title, message):
+        print(f"[FCM] Push to {user_id}: {title} - {message}")

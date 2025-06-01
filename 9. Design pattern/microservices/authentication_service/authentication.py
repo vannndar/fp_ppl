@@ -1,8 +1,8 @@
-from database import PostgreSQL
+from common.event_bus import event_bus
 
 class AuthenticationService:
-    def __init__(self):
-        self.db = PostgreSQL()
+    def __init__(self, db):
+        self.db = db  # Instance PostgreSQL
 
     def register_user(self, user_id, user_data):
         if self.db.get_user(user_id):
@@ -15,7 +15,7 @@ class AuthenticationService:
     def authenticate(self, user_id):
         user = self.db.get_user(user_id)
         if user:
-            print(f"[AuthenticationService] User authenticated: {user_id}")
+            print(f"[AuthenticationService] User {user_id} authenticated")
             return True
-        print(f"[AuthenticationService] User not found: {user_id}")
+        print(f"[AuthenticationService] User {user_id} not found")
         return False
