@@ -1,0 +1,81 @@
+@startuml
+
+package "Study Buddy MVVM Architecture without Microservices (Refined)" {
+
+  actor "User" as user
+
+  node "View (UI)" {
+    rectangle "DashboardView" as dashboard
+    rectangle "GroupView" as group_view
+    rectangle "TaskView" as task_view
+    rectangle "MaterialsView" as material_view
+    rectangle "ScheduleView" as schedule_view
+    rectangle "NoteView" as note_view
+    rectangle "GroupChatView" as group_chat_view
+  }
+
+  node "ViewModel" {
+    rectangle "UserViewModel" as user_viewmodel
+    rectangle "GroupViewModel" as group_viewmodel
+    rectangle "TaskViewModel" as task_viewmodel
+    rectangle "ReminderViewModel" as reminder_viewmodel
+    rectangle "ScheduleViewModel" as schedule_viewmodel
+    rectangle "MaterialViewModel" as material_viewmodel
+    rectangle "NoteViewModel" as note_viewmodel
+    rectangle "GroupChatViewModel" as group_chat_viewmodel
+    rectangle "NotificationViewModel" as notification_viewmodel
+  }
+
+  node "Model (Data Layer)" {
+    rectangle "UserModel (Room/SQLite or CoreData)" as user_model
+    rectangle "GroupModel (Room/SQLite or CoreData)" as group_model
+    rectangle "TaskModel (Room/SQLite or CoreData)" as task_model
+    rectangle "ReminderModel (Room/SQLite or CoreData)" as reminder_model
+    rectangle "ScheduleModel (Room/SQLite or CoreData)" as schedule_model
+    rectangle "MaterialModel (Room/SQLite or CoreData)" as material_model
+    rectangle "NoteModel (Room/SQLite or CoreData)" as note_model
+    rectangle "MessageModel (Firebase Realtime Database)" as message_model
+  }
+
+  node "Backend Notification Service" {
+    rectangle "Notification Service API (Node.js/Express or similar)" as notif_service_api
+  }
+
+  node "FCM Service" {
+    rectangle "Firebase Cloud Messaging" as fcm
+  }
+
+  user --> dashboard : Interacts with UI
+  user --> group_view : Interacts with UI
+  user --> task_view : Interacts with UI
+  user --> material_view : Interacts with UI
+  user --> schedule_view : Interacts with UI
+  user --> note_view : Interacts with UI
+  user --> group_chat_view : Interacts with Group Chat UI
+
+  dashboard --> user_viewmodel : Request user data
+  group_view --> group_viewmodel : Request group data
+  task_view --> task_viewmodel : Request task data
+  reminder_viewmodel --> reminder_viewmodel : Request reminder data
+  schedule_view --> schedule_viewmodel : Request schedule data
+  material_view --> material_viewmodel : Request material data
+  note_view --> note_viewmodel : Request note data
+  group_chat_view --> group_chat_viewmodel : Request chat data and send messages
+
+  user_viewmodel --> user_model : Fetch or update user data
+  group_viewmodel --> group_model : Fetch or update group data
+  task_viewmodel --> task_model : Fetch or update task data
+  reminder_viewmodel --> reminder_model : Fetch or update reminder data
+  schedule_viewmodel --> schedule_model : Fetch or update schedule data
+  material_viewmodel --> material_model : Fetch or update material data
+  note_viewmodel --> note_model : Fetch or update note data
+  group_chat_viewmodel --> message_model : Fetch or send chat messages
+
+  reminder_viewmodel --> notif_service_api : Request to send reminder notification
+  group_chat_viewmodel --> notif_service_api : Request to send group chat notification
+
+  notif_service_api --> fcm : Send push notifications
+
+}
+
+@enduml
