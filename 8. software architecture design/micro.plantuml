@@ -1,0 +1,70 @@
+@startuml
+package "Study Buddy Microservices Architecture (Refined)" {
+
+  actor "User" as user
+  actor "Administrator" as admin
+
+  node "API Gateway" {
+    rectangle "Authentication Service API" as auth_service_api
+    rectangle "Group and Messaging Service API" as group_messaging_service_api
+    rectangle "Task and Reminder Service API" as task_reminder_service_api
+    rectangle "Content and Notes Service API" as content_notes_service_api
+    rectangle "Schedule Service API" as schedule_service_api
+    rectangle "Notification Service API" as notification_service_api
+  }
+
+  node "Microservices" {
+    rectangle "Authentication and User Management Service" as auth_service
+    rectangle "Group and Messaging Service" as group_messaging_service
+    rectangle "Task and Reminder Service" as task_reminder_service
+    rectangle "Content and Notes Management Service" as content_notes_service
+    rectangle "Schedule Service" as schedule_service
+    rectangle "Notification Service" as notification_service
+  }
+
+  node "Database" {
+    rectangle "User Database (PostgreSQL)" as user_db
+    rectangle "Primary MongoDB (Groups, Tasks, Reminders, Schedule Collections)" as primary_mongo_db
+    rectangle "Message Database (Firebase Realtime)" as message_db
+    rectangle "Content and Note Storage (Firebase S3)" as content_notes_db
+  }
+
+  node "Event Broker" {
+    rectangle "Message Broker (Kafka/RabbitMQ)" as message_broker
+  }
+
+  node "FCM" {
+    rectangle "FCM (Firebase Cloud Messaging)" as fcm
+  }
+
+  user --> auth_service_api : Access User Data
+  user --> group_messaging_service_api : Access Group Data & Chat
+  user --> task_reminder_service_api : Access Task & Reminder Data
+  user --> content_notes_service_api : Access Content & Notes
+  user --> schedule_service_api : Access Schedule Data
+  user --> notification_service_api : Receive Notifications
+
+  auth_service_api --> auth_service : Authenticate User, Manage Profiles
+  group_messaging_service_api --> group_messaging_service : Manage Groups & Messages
+  task_reminder_service_api --> task_reminder_service : Manage Tasks & Reminders
+  content_notes_service_api --> content_notes_service : Manage Materials & Notes
+  schedule_service_api --> schedule_service : Manage Schedule
+  notification_service_api --> notification_service : Send Notifications
+
+  auth_service --> user_db : Store User Data & Profiles
+  group_messaging_service --> primary_mongo_db : Store Group Data
+  task_reminder_service --> primary_mongo_db : Store Task, Reminder Data
+  schedule_service --> primary_mongo_db : Store Schedule Data
+  group_messaging_service --> message_db : Store Messages
+  content_notes_service --> content_notes_db : Store Content & Notes
+
+  group_messaging_service --> message_broker : Publish Events (e.g., MessageSent, GroupUpdated)
+  task_reminder_service --> message_broker : Publish Events (e.g., TaskDue, ReminderSet)
+  content_notes_service --> message_broker : Publish Events (e.g., ContentUpdated)
+
+  notification_service --> message_broker : Subscribe to Events
+  notification_service --> fcm : Push Notifications
+
+}
+
+@enduml
