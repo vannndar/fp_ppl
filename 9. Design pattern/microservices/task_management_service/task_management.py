@@ -1,4 +1,5 @@
 from common.event_bus import event_bus
+from task_management_service.task import Task
 
 class TaskManagementService:
     def __init__(self, mongo_db):
@@ -8,10 +9,11 @@ class TaskManagementService:
         if self.mongo_db.get_group(task_id):
             print(f"[TaskManagementService] Task {task_id} already exists")
             return False
+        task = Task(task_id, task_data)  
         self.mongo_db.save_group(task_id, task_data)  # Reuse MongoDB for tasks collection
         print(f"[TaskManagementService] Task created: {task_id}")
         event_bus.publish("TaskCreated", {"task_id": task_id, "data": task_data})
-        return True
+        return task
 
     def set_reminder(self, task_id, reminder_data):
         task = self.mongo_db.get_group(task_id)
@@ -32,3 +34,9 @@ class TaskManagementService:
         print(f"[TaskManagementService] Schedule created: {schedule_id}")
         event_bus.publish("ScheduleCreated", {"schedule_id": schedule_id, "data": schedule_data})
         return True
+
+    def start_task(self, task):
+        task.perform_action()
+    
+    def complete_task(self, task):
+        task.perform_action()

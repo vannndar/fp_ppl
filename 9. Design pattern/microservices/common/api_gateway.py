@@ -40,6 +40,14 @@ class ApiGateway:
     def schedule_event(self, schedule_id, schedule_data):
         print("[ApiGateway] schedule_event")
         return self.task_service.schedule_event(schedule_id, schedule_data)
+    
+    def start_task(self, task):
+        print("[ApiGateway] Starting task...")
+        return self.task_service.start_task(task)
+
+    def complete_task(self, task):
+        print("[ApiGateway] Completing task...")
+        return self.task_service.complete_task(task)
 
     # Content API
     def upload_content(self, content_id, content_data):

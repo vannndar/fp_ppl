@@ -41,9 +41,11 @@ def main():
     api_gateway.send_message("group1", {"sender": "user2", "text": "Sure, sounds good!"})
 
     print("\n--- Task Management Operations ---\n")
-    api_gateway.create_task("task1", {"title": "Math Homework", "due_date": "2025-06-10"})
+    task = api_gateway.create_task("task1", {"title": "Math Homework", "due_date": "2025-06-10"})
+    api_gateway.start_task(task)
     api_gateway.set_reminder("task1", {"reminder_time": "2025-06-09T18:00"})
     api_gateway.schedule_event("schedule1", {"event": "Group Meeting", "time": "2025-06-11T15:00"})
+    api_gateway.complete_task(task)
 
     print("\n--- Content Notes Operations ---\n")
     api_gateway.upload_content("content1", {"title": "Calculus Notes", "file_url": "http://example.com/calculus.pdf"})
