@@ -1,0 +1,91 @@
+@startuml
+
+' User and Profile
+class User {
+    +id: String
+    +username: String
+    +email: String
+    +passwordHash: String
+    +profile: UserProfile
+    +login(): boolean
+    +logout(): void
+}
+
+' Group and Membership
+class Group {
+    +id: String
+    +name: String
+    +description: String
+    +members: List<User>
+    +addMember(user: User): void
+    +removeMember(user: User): void
+}
+
+class Membership {
+    +userId: String
+    +groupId: String
+    +role: String
+}
+
+' Message
+class Message {
+    +id: String
+    +content: String
+    +timestamp: Date
+    +sender: User
+    +group: Group
+    +send(): void
+}
+
+' Content and Notes
+class Content {
+    +id: String
+    +title: String
+    +description: String
+    +fileUrl: String
+    +upload(): void
+}
+
+class Note {
+    +id: String
+    +content: String
+    +author: User
+    +timestamp: Date
+    +addNote(): void
+}
+
+' Task, Reminder, and Schedule
+class Task {
+    +id: String
+    +title: String
+    +description: String
+    +deadline: Date
+    +status: String
+    +assignTo: User
+    +setReminder(reminder: Reminder): void
+}
+
+class Reminder {
+    +id: String
+    +taskId: String
+    +reminderTime: Date
+    +sendReminder(): void
+}
+
+
+' Relationships
+Membership "*" -- "1" User : "refers to"
+Membership "*" -- "1" Group : "belongs to"
+User "1" -- "*" Group : "member of"
+Group "1" -- "*" Message : "contains"
+User "1" -- "*" Message : "sent by"
+Group "1" o-- "*" User : "has members"
+Task "1" -- "*" User : "assigned to"
+Task "*" *-- "1" Reminder : "has"
+Reminder "1" -- "1" Task : "reminds"
+Task "1" o-- "*" Content : "attached"
+Group "1" o-- "*" Note : "contains"
+Group "1" *-- "0..1" Task : "has tasks"
+
+
+@enduml
