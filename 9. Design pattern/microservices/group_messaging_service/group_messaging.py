@@ -29,6 +29,15 @@ class GroupMessagingService:
         print(f"[GroupMessagingService] Message sent to group {group_id}")
         event_bus.publish("MessageSent", {"group_id": group_id, "message": message})
         return True
+
+    def get_messages(self, group_id):
+        group = self.mongo_db.get_group(group_id)
+        if not group:
+            print(f"[GroupMessagingService] Group {group_id} not found")
+            return []
+        messages = self.firebase_db.get_messages(group_id)
+        print(f"[GroupMessagingService] Retrieved messages for group {group_id}")
+        return messages
     
     def join_group(self, group_id, user_id):
         group = self.mongo_db.get_group(group_id)

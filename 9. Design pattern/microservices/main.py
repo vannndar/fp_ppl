@@ -27,10 +27,12 @@ def main():
 
     # Contoh operasi
     print("--- Starting microservices simulation... ---\n")
-    api_gateway.register_user("user1", {"name": "Alice"})
-    api_gateway.authenticate("user1")
-    api_gateway.register_user("user2", {"name": "Bob"})
-    api_gateway.authenticate("user2")
+    api_gateway.register_user("user1", {"name": "Alice", "password": "password123"})
+    api_gateway.register_user("user2", {"name": "Bob", "password": "password456"})
+    api_gateway.register_user("user3", {"name": "Charlie", "password": "password789"})
+
+    tokenUser1 = api_gateway.authenticate("user1", "password123")
+    tokenUser2 = api_gateway.authenticate("user2", "password456")
 
     print("\n--- Group Messaging Operations ---\n")
     api_gateway.create_group("group1", "Study Group", "user1")
@@ -39,6 +41,8 @@ def main():
     api_gateway.send_message("group1", {"sender": "user2", "text": "Hi Alice!"})
     api_gateway.send_message("group1", {"sender": "user1", "text": "Let's meet tomorrow."})
     api_gateway.send_message("group1", {"sender": "user2", "text": "Sure, sounds good!"})
+    message = api_gateway.get_messages("group1")
+    print(f"[Main] Messages in group1: {message}")
 
     print("\n--- Task Management Operations ---\n")
     task = api_gateway.create_task("task1", {"title": "Math Homework", "due_date": "2025-06-10"})

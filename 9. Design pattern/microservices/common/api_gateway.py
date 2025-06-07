@@ -11,9 +11,13 @@ class ApiGateway:
         print("[ApiGateway] register_user")
         return self.auth_service.register_user(user_id, user_data)
 
-    def authenticate(self, user_id):
+    def authenticate(self, user_id, password):
         print("[ApiGateway] authenticate")
-        return self.auth_service.authenticate(user_id)
+        return self.auth_service.authenticate(user_id, password)
+    
+    def verify_token(self, token):
+        print("[ApiGateway] verify_token")
+        return self.auth_service.verify_jwt(token)
 
     # Group API
     def create_group(self, group_id, group_name, owner_id):
@@ -23,6 +27,10 @@ class ApiGateway:
     def send_message(self, group_id, message):
         print("[ApiGateway] send_message")
         return self.group_service.send_message(group_id, message)
+
+    def get_messages(self, group_id):
+        print("[ApiGateway] get_messages")
+        return self.group_service.get_messages(group_id)
 
     def join_group(self, group_id, user_id):
         print("[ApiGateway] join_group")

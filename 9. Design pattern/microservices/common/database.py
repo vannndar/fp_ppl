@@ -44,6 +44,9 @@ class FirebaseRealtimeDB:
         self.messages.append(message)
         print(f"[FirebaseRealtimeDB] Message saved: {message}")
 
+    def get_messages(self, group_id):
+        return [msg for msg in self.messages if msg.get("group_id") == group_id]
+
 class FirebaseStorage:
     def __init__(self):
         self.contents = {}
