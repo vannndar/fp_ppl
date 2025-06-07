@@ -1,3 +1,4 @@
+import datetime
 class PostgreSQL:
     def __init__(self):
         self.users = {}
@@ -41,6 +42,7 @@ class FirebaseRealtimeDB:
         self.messages = []
 
     def save_message(self, message):
+        message["timestamp"] = datetime.datetime.utcnow().isoformat()
         self.messages.append(message)
         print(f"[FirebaseRealtimeDB] Message saved: {message}")
 

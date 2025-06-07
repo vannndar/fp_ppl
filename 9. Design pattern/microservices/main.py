@@ -35,12 +35,12 @@ def main():
     tokenUser2 = api_gateway.authenticate("user2", "password456")
 
     print("\n--- Group Messaging Operations ---\n")
-    api_gateway.create_group("group1", "Study Group", "user1")
-    api_gateway.send_message("group1", {"sender": "user1", "text": "Hello, team!"})
-    api_gateway.join_group("group1", "user2")
-    api_gateway.send_message("group1", {"sender": "user2", "text": "Hi Alice!"})
-    api_gateway.send_message("group1", {"sender": "user1", "text": "Let's meet tomorrow."})
-    api_gateway.send_message("group1", {"sender": "user2", "text": "Sure, sounds good!"})
+    api_gateway.create_group("group1", "Study Group", tokenUser1)
+    api_gateway.send_message("group1", {"sender": tokenUser1, "text": "Hello, team!"})
+    api_gateway.join_group("group1", tokenUser2)
+    api_gateway.send_message("group1", {"sender": tokenUser2, "text": "Hi Alice!"})
+    api_gateway.send_message("group1", {"sender": tokenUser1, "text": "Let's meet tomorrow."})
+    api_gateway.send_message("group1", {"sender": tokenUser2, "text": "Sure, sounds good!"})
     message = api_gateway.get_messages("group1")
     print(f"[Main] Messages in group1: {message}")
 

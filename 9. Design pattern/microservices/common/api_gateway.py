@@ -20,9 +20,9 @@ class ApiGateway:
         return self.auth_service.verify_jwt(token)
 
     # Group API
-    def create_group(self, group_id, group_name, owner_id):
+    def create_group(self, group_id, group_name, ownerjwt):
         print("[ApiGateway] create_group")
-        return self.group_service.create_group(group_id, group_name, owner_id)
+        return self.group_service.create_group(group_id, group_name, ownerjwt)
 
     def send_message(self, group_id, message):
         print("[ApiGateway] send_message")

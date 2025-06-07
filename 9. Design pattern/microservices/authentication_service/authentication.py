@@ -68,6 +68,6 @@ class AuthenticationService:
         except jwt.ExpiredSignatureError:
             print("Token has expired")
             return None
-        except pyjwt.InvalidTokenError:
+        except jwt.InvalidTokenError:
             print("Invalid token")
             return None
