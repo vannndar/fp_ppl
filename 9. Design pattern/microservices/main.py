@@ -60,6 +60,8 @@ def main():
     print("\n--- Content Notes Operations ---\n")
     api_gateway.upload_content("content1", {"title": "Calculus Notes", "file_url": "http://example.com/calculus.pdf"}, "group1")
     api_gateway.edit_content("content1", {"title": "Calculus Notes Updated", "file_url": "http://example.com/calculus_v2.pdf"})
+    content = api_gateway.get_content("group1")
+    print(f"[Main] Content group1: {content}")
 
 if __name__ == "__main__":
     main()

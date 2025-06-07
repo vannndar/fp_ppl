@@ -100,6 +100,9 @@ class FirebaseStorage:
 
     def get_content(self, content_id):
         return self.contents.get(content_id)
+    
+    def get_contents_by_group(self, group_id):
+        return {cid: data for cid, data in self.contents.items() if data.get("group_id") == group_id}
 
 class FCMClient:
     def send_push(self, user_id, title, message):

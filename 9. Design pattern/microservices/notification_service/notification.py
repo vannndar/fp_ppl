@@ -28,8 +28,8 @@ class NotificationService:
 
     def on_content_uploaded(self, event_data):
         print(f"[NotificationService] Notify content uploaded {event_data['content_id']}")
-        self.fcm_client.send_push("user_content_viewer", "Content Uploaded", f"Content uploaded: {event_data['content_id']}")
+        self.fcm_client.send_push(event_data['group_id'], "Content Uploaded", f"Content uploaded: {event_data['content_id']}")
 
     def on_content_updated(self, event_data):
         print(f"[NotificationService] Notify content updated {event_data['content_id']}")
-        self.fcm_client.send_push("user_content_viewer", "Content Updated", f"Content updated: {event_data['content_id']}")
+        self.fcm_client.send_push(event_data['group_id'], "Content Updated", f"Content updated: {event_data['content_id']}")

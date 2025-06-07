@@ -66,10 +66,14 @@ class ApiGateway:
         return self.task_service.complete_task(task)
 
     # Content API
-    def upload_content(self, content_id, content_data):
+    def upload_content(self, content_id, content_data, group_id):
         print("[ApiGateway] upload_content")
-        return self.content_service.upload_content(content_id, content_data)
+        return self.content_service.upload_content(content_id, content_data, group_id)
 
     def edit_content(self, content_id, new_data):
         print("[ApiGateway] edit_content")
         return self.content_service.edit_content(content_id, new_data)
+
+    def get_content(self, group_id):
+        print("[ApiGateway] get_content")
+        return self.content_service.get_content_by_group(group_id)
