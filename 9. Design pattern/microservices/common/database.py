@@ -13,6 +13,8 @@ class PostgreSQL:
 class MongoDB:
     def __init__(self):
         self.groups = {}
+        self.tasks = {}
+        self.schedules = {}
 
     def save_group(self, group_id, data):
         self.groups[group_id] = data
@@ -36,6 +38,45 @@ class MongoDB:
             print(f"[MongoDB] Group updated: {group_id}")
         else:
             print(f"[MongoDB] Group {group_id} not found")
+
+    def save_task(self, task):
+        self.tasks[task.task_id] = task
+        print(f"[MongoDB] Task saved: {task.task_id}")
+
+    def get_tasks(self, group_id):
+        tasks = [task for task in self.tasks.values() if task.group_id == group_id]
+        return tasks
+    
+    def get_task(self, task_id):
+        return self.tasks.get(task_id)
+    
+    def update_task(self, task_id, task):
+        if task_id in self.tasks:
+            self.tasks[task_id] = task
+            print(f"[MongoDB] Task updated: {task_id}")
+        else:
+            print(f"[MongoDB] Task {task_id} not found")
+    
+    def delete_task(self, task_id):
+        if task_id in self.tasks:
+            del self.tasks[task_id]
+            print(f"[MongoDB] Task deleted: {task_id}")
+        else:
+            print(f"[MongoDB] Task {task_id} not found")
+    
+    def create_schedule(self, schedule_id, schedule_data):
+        if schedule_id in self.schedules:
+            print(f"[MongoDB] Schedule {schedule_id} already exists")
+            return False
+        self.schedules[schedule_id] = schedule_data
+        print(f"[MongoDB] Schedule created: {schedule_id}")
+        return True
+    
+    def get_schedule(self, schedule_id):
+        return self.schedules.get(schedule_id)
+    
+    def get_schedule_by_group(self, group_id):
+        return [schedule for schedule in self.schedules.values() if schedule.get("group_id") == group_id]
 
 class FirebaseRealtimeDB:
     def __init__(self):

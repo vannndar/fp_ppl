@@ -37,17 +37,25 @@ class ApiGateway:
         return self.group_service.join_group(group_id, user_id)
 
     # Task API
-    def create_task(self, task_id, task_data):
+    def create_task(self, task_id, task_data, group_id):
         print("[ApiGateway] create_task")
-        return self.task_service.create_task(task_id, task_data)
+        return self.task_service.create_task(task_id, task_data, group_id)
+
+    def get_task_by_group(self, group_id):
+        print("[ApiGateway] get_task")
+        return self.task_service.get_task_by_group(group_id)
 
     def set_reminder(self, task_id, reminder_data):
         print("[ApiGateway] set_reminder")
         return self.task_service.set_reminder(task_id, reminder_data)
 
-    def schedule_event(self, schedule_id, schedule_data):
+    def schedule_event(self, schedule_id, schedule_data, group_id):
         print("[ApiGateway] schedule_event")
-        return self.task_service.schedule_event(schedule_id, schedule_data)
+        return self.task_service.schedule_event(schedule_id, schedule_data, group_id)
+
+    def get_schedule_by_group(self, group_id):
+        print("[ApiGateway] get_schedule")
+        return self.task_service.get_schedule_by_group(group_id)
     
     def start_task(self, task):
         print("[ApiGateway] Starting task...")

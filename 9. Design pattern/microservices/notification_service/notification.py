@@ -16,15 +16,15 @@ class NotificationService:
 
     def on_task_created(self, event_data):
         print(f"[NotificationService] Notify task created {event_data['task_id']}")
-        self.fcm_client.send_push("user_task_owner", "New Task", f"Task created: {event_data['task_id']}")
+        self.fcm_client.send_push(event_data['group_id'], "New Task", f"Task created: {event_data['task_id']}")
 
     def on_reminder_set(self, event_data):
         print(f"[NotificationService] Notify reminder set {event_data['task_id']}")
-        self.fcm_client.send_push("user_task_owner", "Reminder Set", f"Reminder set for task {event_data['task_id']}")
+        self.fcm_client.send_push(event_data['group_id'], "Reminder Set", f"Reminder set for task {event_data['task_id']}")
 
     def on_schedule_created(self, event_data):
         print(f"[NotificationService] Notify schedule created {event_data['schedule_id']}")
-        self.fcm_client.send_push("user_schedule_owner", "Schedule Created", f"Schedule created: {event_data['schedule_id']}")
+        self.fcm_client.send_push(event_data['group_id'], "Schedule Created", f"Schedule created: {event_data['schedule_id']}")
 
     def on_content_uploaded(self, event_data):
         print(f"[NotificationService] Notify content uploaded {event_data['content_id']}")
