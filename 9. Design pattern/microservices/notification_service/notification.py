@@ -12,7 +12,7 @@ class NotificationService:
 
     def on_message_sent(self, event_data):
         print(f"[NotificationService] Notify message in group {event_data['group_id']}")
-        self.fcm_client.send_push("user_group_member", "New Message", f"New message in group {event_data['group_id']}")
+        self.fcm_client.send_push(event_data['group_id'], "New Message", f"New message in group {event_data['group_id']}")
 
     def on_task_created(self, event_data):
         print(f"[NotificationService] Notify task created {event_data['task_id']}")
